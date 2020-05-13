@@ -1,0 +1,64 @@
+Guia Intercambios de Datos con GraphQl
+GraphQL-Node.js
+FrontEnd Js-Backend Node.js
+1-Creamos el Proyecto de Node.js en Terminal
+npm init -y
+2-Crear Server, en este caso Express.js
+npm i express
+3-Creo carpeta Src y dentro el archivo index.js
+Creamos el Server Express, lo instanciamos y lo ejecutamos en el puerto 3000
+(probamos que funcione con node src/index.js y en navegador localhost:(port))
+Nota: usaremos Babel para transpilar y/o compilador para utilizar las ultimas
+versiones de Js. (Ej. EcmaScript 2019) y al convertirlo Node.js lo va a entender,
+Ej: Node.js hasta el momento no soporta Import de Modulos, solo usa
+el Require.
+Instalación de Babel en Node.js npm install --save-dev @babel/core @babel/cli @babel/preset-env
+Una vez instalado, configuraremos que vamos a convertir en Babel en el archivo .babelrc:
+{"presets":[ "@babel/preset-env"]} usando este solo compilara las ultimas versiones de Js
+Posteriormente, instalaremos el modulo de Node.js para usar Babel como Desarrollo
+npm i @babel/node -D
+4-Crearemos el Script de Conversión, Ejecucion, Compilacion y Despliegue en package.json
+"scripts": {
+    "build": "babel src -d dist --source-maps",//modulo para convertir, ubicacion y opción para debbugear
+    //al terminar si esta compilado, se puede ejecutar con node dist/index.js    
+    //"start": "babel-node src/index.js",//para ejecutarlo transpilado
+    //cuando estemos desarrollando usando Nodemon usamos el Start
+    //usamos este para no crear un archivo nodemon.json    
+    "start": "nodemon src/index.js --exec babel-node",
+    
+    //este para ejecutarlo con Node.js
+    "serve": "node dist/index.js"
+
+}
+4.1-Instalaremos el modulo Nodemon, para reiniciar automaticamente el Server
+de Node.js:  npm i nodemon
+Modulo RimRaf para eliminar carpetas multiplataforma: npm i rimraf
+lo agregamos en script para borrar la carpeta /dist : "clean": "rimraf dist"
+
+5-Integración de GraphQL
+npm i graphql express-graphql graphql-tools
+*en index.js
+//Necesitamos importar el modulo de GraphQl
+//y el Middleware de express para que la ruta 
+// sea procesada utilizando una herramienta de GraphQl
+import graphqlHTTP from "express-graphql";
+//cuando se ingrese a cierta ruta devuelva una Herramienta que la procese
+app.get('/', (req, res) => {
+    res.json({
+        message: 'Hello World!!!!'
+    })
+});
+app.use('/graphql', graphqlHTTP({
+
+}));
+//Si ingresamos en la ruta localhost:3000/graphql
+nos da el mensaje en el navegador
+{"errors":[{"message":"GraphQL middleware options must contain a schema."}]}
+**Debemos enviarle un Schema y la herramienta de interfaz de GraphQl
+const schema = {}
+app.use('/graphql', graphqlHTTP({
+    graphiql: true,
+    schema: schema
+}));
+6-Creamos un Schema para definir que es lo que se puede consultar
+  y lo crearemos en un archivo aparte 
