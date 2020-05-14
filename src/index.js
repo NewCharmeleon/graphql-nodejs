@@ -31,6 +31,8 @@ app.get('/', (req, res) => {
 app.use('/graphql', graphqlHTTP({
     //interfaz para testear
     graphiql: true,
+    //Schema que le dice al Cliente en un solo EndPoint que puede consultar
+    //o no, este Schema es la AutoDocumentacion de GraphQl
     schema: schema,
     //podemos pasar ciertos datos a todos los Resolvers
     //se puede usar para Autenticar Usuarios o Cadenas de Conexión
